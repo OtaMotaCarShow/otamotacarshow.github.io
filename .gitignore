@@ -1,0 +1,5 @@
+# Ignores specfic file types
+# *.md
+
+# Grant exceptions to these files or folder
+! README.md
