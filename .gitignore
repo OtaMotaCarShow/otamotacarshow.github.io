@@ -1,5 +1,7 @@
 # Ignores specfic file types
  *.md
+ CLAUDE.md
+ otamota-qr-redirect-agent-brief.md
 
 # Grant exceptions to these files or folder
 ! README.md
