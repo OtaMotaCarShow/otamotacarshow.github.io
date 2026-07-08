@@ -47,7 +47,7 @@
       src="https://lh3.googleusercontent.com/pw/AP1GczMrOJTas8s5AeZ6L6Ofqasl8YBdvsJS8n7at74MN0jDxeJTaEcuTsm716nc8DHdzM1nAGiXemjUD_VXzWzmKNn-w_IahSC6imIlozyD7QtcuXfAv_jkGNPmaM3wv4e32zteKibBH0K7-APm8o-5kgk3=w1835-h752-s-no-gm?authuser=0"
       alt="OtaMota Car Show"
     >
-    <p class="status" id="status">Redirecting to voting form...</p>
+    <p class="status" id="status">Redirecting...</p>
   </div>
 
   <script>
@@ -59,30 +59,42 @@
         statusEl.classList.add('error');
       }
 
-      var spaceId = window.location.pathname
+      var slug = window.location.pathname
         .replace(/^\//, '')
         .split('/')[0]
         .toUpperCase();
 
-      if (!spaceId) {
-        showError('No space ID found. Please scan the QR code on your car show sign.');
+      if (!slug) {
+        showError('No destination found. Please scan the QR code again or ask a staff member for help.');
         return;
       }
 
-      fetch('/cars.json')
+      fetch('/redirects.json')
         .then(function (res) {
-          if (!res.ok) throw new Error('config load failed');
+          if (!res.ok) throw new Error('redirects load failed');
           return res.json();
         })
-        .then(function (data) {
-          if (!data.spaces.includes(spaceId)) {
-            showError('Space "' + spaceId + '" was not found. Please scan the QR code again or ask a staff member for help.');
+        .then(function (redirects) {
+          if (redirects[slug]) {
+            window.location.replace(redirects[slug]);
             return;
           }
-          window.location.replace(data.form_base_url + spaceId + data.form_suffix);
+
+          return fetch('/cars.json')
+            .then(function (res) {
+              if (!res.ok) throw new Error('config load failed');
+              return res.json();
+            })
+            .then(function (data) {
+              if (!data.spaces.includes(slug)) {
+                showError('Space "' + slug + '" was not found. Please scan the QR code again or ask a staff member for help.');
+                return;
+              }
+              window.location.replace(data.form_base_url + slug + data.form_suffix);
+            });
         })
         .catch(function () {
-          showError('Something went wrong loading the voting form. Please try again or ask a staff member for help.');
+          showError('Something went wrong. Please try again or ask a staff member for help.');
         });
     }());
   </script>

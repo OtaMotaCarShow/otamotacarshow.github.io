@@ -1,22 +1,42 @@
-# OtaMota Car Show - QR Code Voting Redirect
+# OtaMota Car Show - GitHub Pages
 
-This repo powers the QR code voting system for the OtaMota Car Show. Each car in the show has a printed sign with a QR code. When an attendee scans the code, they are instantly redirected to a pre-filled Google Form for that car's space number.
+This repo powers the QR code voting system and general redirects for the OtaMota Car Show. Each car in the show has a printed sign with a QR code. When an attendee scans the code, they are instantly redirected to a pre-filled Google Form for that car's space number.
 
-**The QR codes never change.** Only the config file needs to be updated each year.
+**The QR codes never change.** Only the config files need to be updated each year.
 
 ---
 
 ## How it works
 
-Each QR code encodes a URL like `https://otamotacarshow.github.io/CS01`. When visited, the page looks up that space ID in `cars.json`, builds the correct Google Form URL, and redirects the attendee automatically.
+GitHub Pages serves `404.html` for any path that doesn't exist as a real file. The redirect page reads the URL path, checks `redirects.json` first, then falls back to `cars.json` for car show voting, and redirects automatically.
+
+The root URL (`otamotacarshow.github.io`) serves `index.html` - a welcome page with links to key resources.
 
 ---
 
 ## Files
 
-- `cars.json` - The only file you need to edit each year
-- `404.html` - The redirect page served to attendees (do not edit)
+- `index.html` - Welcome/landing page served at the root URL
+- `404.html` - The redirect page served for all unknown paths (do not edit)
+- `redirects.json` - Simple slug-to-URL redirects (tournament links, etc.)
+- `cars.json` - Car show voting config, updated each year
 - `README.md` - This file
+
+---
+
+## Adding a new redirect
+
+Open `redirects.json` and add a new entry. Keys must be uppercase:
+
+```json
+{
+  "TOURNAMENT": "https://wkf.ms/43CzV0k",
+  "STAFFTOURNAMENT": "https://wkf.ms/4xm6EV8",
+  "MYNEWSLUG": "https://example.com/destination"
+}
+```
+
+The QR code or link should use the path in any casing - `/mynewslug`, `/MYNEWSLUG`, and `/MyNewSlug` all resolve to the same entry. Commit and push; GitHub Pages deploys within a minute or two.
 
 ---
 
@@ -57,6 +77,8 @@ Open `cars.json` and update the two URL fields:
 }
 ```
 
+The "Vote for Best in Show" button on the welcome page (`index.html`) automatically picks up the new form URL from `cars.json` - no additional edits needed.
+
 If the space numbers changed from last year, also update the `spaces` list. Add or remove entries as needed. Space IDs must match the QR codes exactly (e.g. `CS01`, not `cs01` or `1`).
 
 ### Step 4 - Verify before the event
@@ -94,3 +116,6 @@ If new car spaces are added (e.g. CS41 and beyond), just add the new IDs to the 
 
 **Form opens but the agreement field is not pre-filled**
 - The `form_suffix` may be wrong or missing - re-check Step 2 above
+
+**A redirect slug isn't working**
+- Confirm the key in `redirects.json` is uppercase and the latest version has been committed and pushed

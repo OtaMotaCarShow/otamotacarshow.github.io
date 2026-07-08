@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OtaMota Car Show</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #111;
+      font-family: system-ui, -apple-system, sans-serif;
+      color: #fff;
+      padding: 1.5rem;
+    }
+
+    .container {
+      text-align: center;
+      max-width: 480px;
+      width: 100%;
+    }
+
+    .logo {
+      max-width: 340px;
+      width: 100%;
+      margin-bottom: 1.5rem;
+    }
+
+    .tagline {
+      font-size: 1.1rem;
+      color: rgba(255, 255, 255, 0.7);
+      margin-bottom: 2rem;
+    }
+
+    .buttons {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .btn {
+      display: block;
+      padding: 0.85rem 1.25rem;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: 600;
+      text-decoration: none;
+      transition: opacity 0.15s;
+    }
+
+    .btn:hover {
+      opacity: 0.8;
+    }
+
+    .btn-primary {
+      background: #fff;
+      color: #111;
+    }
+
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.1);
+      color: #fff;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <img
+      class="logo"
+      src="https://lh3.googleusercontent.com/pw/AP1GczMrOJTas8s5AeZ6L6Ofqasl8YBdvsJS8n7at74MN0jDxeJTaEcuTsm716nc8DHdzM1nAGiXemjUD_VXzWzmKNn-w_IahSC6imIlozyD7QtcuXfAv_jkGNPmaM3wv4e32zteKibBH0K7-APm8o-5kgk3=w1835-h752-s-no-gm?authuser=0"
+      alt="OtaMota Car Show"
+    >
+    <p class="tagline">Welcome to the OtaMota Car Show</p>
+    <div class="buttons">
+      <a class="btn btn-primary" href="https://otakon.com/carshow" target="_blank" rel="noopener">Car Show Info</a>
+      <a class="btn btn-secondary" href="https://otakon.com/carshowinfo" target="_blank" rel="noopener">Links &amp; Resources</a>
+      <a class="btn btn-secondary" id="vote-btn" href="#" style="display:none">Vote for Best in Show</a>
+      <a class="btn btn-secondary" href="https://wkf.ms/43CzV0k" target="_blank" rel="noopener">Racing Sim Tournament</a>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      fetch('/cars.json')
+        .then(function (res) {
+          if (!res.ok) throw new Error('config load failed');
+          return res.json();
+        })
+        .then(function (data) {
+          var btn = document.getElementById('vote-btn');
+          btn.href = data.form_base_url.split('?')[0];
+          btn.style.display = 'block';
+        })
+        .catch(function () {
+          // If cars.json fails, the other three buttons still work fine
+        });
+    }());
+  </script>
+</body>
+</html>
